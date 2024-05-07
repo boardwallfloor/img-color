@@ -3,9 +3,12 @@ package main
 import (
 	"errors"
 	"fmt"
+	"image"
 	"image/color"
+	"image/jpeg"
 	"log"
 	"math"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -93,4 +96,43 @@ func getRgb(xStart, xEnd, yStart, yEnd int, wg *sync.WaitGroup, img *vips.ImageR
 	}
 	fmt.Println(len(rgb))
 	fmt.Println("done")
+}
+
+func createGradient() {
+	// Define image dimensions
+	width := 800
+	height := 600
+
+	// Create a new RGBA image
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
+
+	// Define colors for the gradient
+	startColor := color.RGBA{255, 0, 0, 255} // Red
+	endColor := color.RGBA{0, 0, 255, 255}   // Blue
+	colorRange := width                      // Number of pixels for the gradient
+
+	// Create the gradient
+	for x := 0; x < width; x++ {
+		r := startColor.R + uint8(x*(int(endColor.R)-int(startColor.R))/colorRange)
+		g := startColor.G + uint8(x*(int(endColor.G)-int(startColor.G))/colorRange)
+		b := startColor.B + uint8(x*(int(endColor.B)-int(startColor.B))/colorRange)
+		for y := 0; y < height; y++ {
+			img.Set(x, y, color.RGBA{r, g, b, 255})
+		}
+	}
+
+	// Create a PNG file
+	file, err := os.Create("gradient.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	// Encode the image as PNG and write it to the file
+	err = jpeg.Encode(file, img, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("Gradient image created and saved as gradient.png")
 }
