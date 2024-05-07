@@ -136,3 +136,21 @@ func createGradient() {
 
 	log.Println("Gradient image created and saved as gradient.png")
 }
+
+func getRGBArray(height, width int, img image.Image) [][]RGB {
+	imgRGB := make([][]RGB, height)
+	for y := 0; y < height; y++ {
+		tempArr := make([]RGB, width)
+		for x := 0; x < width; x++ {
+			r, g, b, _ := img.At(x, y).RGBA()
+
+			r8 := uint8(r >> 8)
+			g8 := uint8(g >> 8)
+			b8 := uint8(b >> 8)
+
+			tempArr[x] = RGB{r8, g8, b8}
+		}
+		imgRGB[y] = tempArr
+	}
+	return imgRGB
+}

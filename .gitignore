@@ -1,2 +1,4 @@
 output/
 cied2k.go
+cpu.prof
+

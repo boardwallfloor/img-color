@@ -8,6 +8,7 @@ import (
 	"image/png"
 	"log"
 	"os"
+	"path"
 
 	"github.com/davidbyttow/govips/v2/vips"
 )
@@ -90,7 +91,7 @@ func (prc *ProcessStdLib) Process(imgRef *vips.ImageRef, palette []string) {
 			newImage.Set(x, y, convertedByte[y][x])
 		}
 	}
-	file, err := os.Create(fmt.Sprintf("%s.png", prc.newFileName))
+	file, err := os.Create(path.Join(prc.saveDir, fmt.Sprintf("%s.png", prc.newFileName)))
 	if err != nil {
 		log.Fatal(err)
 	}
